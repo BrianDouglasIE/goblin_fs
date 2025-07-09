@@ -1,21 +1,14 @@
-#include <stddef.h>
-
 #ifndef GOBLIN_FS_H
 #define GOBLIN_FS_H
 
-typedef struct {
-	char path_seperator;
-} goblin_fs;
-
+#include <stddef.h>
 typedef const char *Path;
 
-goblin_fs *fs_init(char path_seperator);
-void fs_free(goblin_fs *fs);
+int is_dir( Path path);
+int is_file(Path path);
+int is_link(Path path);
+long get_file_size(Path path);
 
-int is_dir(goblin_fs *fs,  Path path);
-int is_file(goblin_fs *fs,  Path path);
-int get_file_size(goblin_fs *fs,  Path path);
-
-const char *read_entire_file(goblin_fs *fs,  Path path);
+char *get_file_content(Path path);
 
 #endif

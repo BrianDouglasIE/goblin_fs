@@ -1,22 +1,35 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
 #include <assert.h>
+#include <string.h>
 #include "fs.h"
 
 int main() {
-	char path_seperator = '/';
-	goblin_fs *fs = fs_init(path_seperator);
-	assert(fs != NULL);
-	assert(fs->path_seperator == path_seperator);
+    assert(is_dir("/does/not/exist") == -1);
+    assert(is_dir("./example_files") == 1);
+	assert(!is_dir("./example_files/hello_world.txt"));
+	assert(!is_dir("./example_files/slink.txt"));
 
-	assert(is_dir(fs, "/does/not/exist") == -1);
-	assert(is_file(fs, "/does/not/exist.txt") == -1);
+	assert(is_file("/does/not/exist.txt") == -1);
+	assert(is_file("./example_files/hello_world.txt") == 1);
+	assert(!is_file("./example_files"));
+	assert(!is_file("./example_files/slink.txt"));
 
-	assert(get_file_size(fs, "/does/not/exist.txt") == -1);
-	assert(get_file_size(fs, "./example_files/14000.bin") == 14000);
+	assert(is_link("/does/not/exist.txt") == -1);
+	assert(is_link("./example_files/slink.txt") == 1);
+	assert(!is_link("./example_files"));
+	assert(!is_link("./example_files/hello_world.txt"));
 
-	assert(read_entire_file(fs, "/does/not/exist.txt") == NULL);
+	assert(get_file_size("/does/not/exist.txt") == -1);
+	assert(get_file_size("./example_files/14000.bin") == 14000);
 
-	fs_free(fs);
-	fs = NULL;
+	assert(get_file_content("/does/not/exist.txt") == NULL);
+
+	char *file_content = get_file_content("./example_files/hello_world.txt");
+	puts(file_content);
+	assert(strcmp(file_content, "hello world\n") == 0);
+	free(file_content);
 
 	return 0;
 }
