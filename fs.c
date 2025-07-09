@@ -6,44 +6,33 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-int is_link(Path path) {
-    struct stat st;
-    if(lstat(path, &st) == -1) {
+inode_type *whats_at(Path path) {
+    inode_type *type = malloc(sizeof(inode_type));
+    if(type == NULL) {
+        perror("malloc");
+        return NULL;
+    }
+
+    struct stat link_stat;
+    if(lstat(path, &link_stat) == -1) {
         perror("lstat");
-        return -1;
+        free(type);
+        return NULL;
     }
 
-    return S_ISLNK(st.st_mode);
-}
-
-int is_dir(Path path) {
-    int link_result = is_link(path);
-    if (link_result) {
-        return link_result < 0 ? -1 : 0;
-    }
+    type->is_link = S_ISLNK(link_stat.st_mode);
 
     struct stat st;
     if(stat(path, &st) == -1) {
         perror("stat");
-        return -1;
+        free(type);
+        return NULL;
     }
 
-    return S_ISDIR(st.st_mode);
-}
+    type->is_dir = S_ISDIR(st.st_mode);
+    type->is_file = S_ISREG(st.st_mode);
 
-int is_file(Path path) {
-    int link_result = is_link(path);
-    if (link_result) {
-        return link_result < 0 ? -1 : 0;
-    }
-
-    struct stat st;
-    if(stat(path, &st) == -1) {
-        perror("stat");
-        return -1;
-    }
-
-    return S_ISREG(st.st_mode);
+    return type;
 }
 
 long get_file_size(Path path) {
