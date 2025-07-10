@@ -10,7 +10,7 @@ typedef struct {
     int is_link;
 } inode_type;
 
-inode_type *inode_type_at(Path path);
+inode_type *get_inode_type(Path path);
 
 long get_file_size(Path path);
 
