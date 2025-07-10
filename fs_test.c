@@ -9,10 +9,10 @@ int main() {
 
     ///////////////////////////////////////
     // whats_at
-    inode_type *test_dir = whats_at("./example_files");
-    inode_type *test_file = whats_at("./example_files/hello_world.txt");
-    inode_type *test_link = whats_at("./example_files/slink");
-    inode_type *test_empty = whats_at("/does/not/exist");
+    inode_type *test_dir = inode_type_at("./example_files");
+    inode_type *test_file = inode_type_at("./example_files/hello_world.txt");
+    inode_type *test_link = inode_type_at("./example_files/slink");
+    inode_type *test_empty = inode_type_at("/does/not/exist");
 
     assert(test_dir->is_dir == 1);
     assert(test_dir->is_file == 0);

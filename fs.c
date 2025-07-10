@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-inode_type *whats_at(Path path) {
+inode_type *inode_type_at(Path path) {
     inode_type *type = malloc(sizeof(inode_type));
     if(type == NULL) {
         perror("malloc");
