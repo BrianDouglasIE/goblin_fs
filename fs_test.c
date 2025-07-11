@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <assert.h>
@@ -9,10 +8,10 @@ int main() {
 
     ///////////////////////////////////////
     // whats_at
-    inode_type *test_dir = get_inode_type("./example_files");
-    inode_type *test_file = get_inode_type("./example_files/hello_world.txt");
-    inode_type *test_link = get_inode_type("./example_files/slink");
-    inode_type *test_empty = get_inode_type("/does/not/exist");
+    InodeType *test_dir = get_inode_type("./example_files");
+    InodeType *test_file = get_inode_type("./example_files/hello_world.txt");
+    InodeType *test_link = get_inode_type("./example_files/slink");
+    InodeType *test_empty = get_inode_type("/does/not/exist");
 
     assert(test_dir->is_dir == 1);
     assert(test_dir->is_file == 0);
@@ -42,10 +41,10 @@ int main() {
     // get_file_content
 	assert(get_file_content("/does/not/exist.txt") == NULL);
 
-	char *file_content = get_file_content("./example_files/hello_world.txt");
-	puts(file_content);
-	assert(strcmp(file_content, "hello world\n") == 0);
-	free(file_content);
+	FileContent *content = get_file_content("./example_files/hello_world.txt");
+	assert(content->size == 12);
+	assert(strcmp(content->data, "hello world\n") == 0);
+	free_file_content(content);
 
 	return 0;
 }
